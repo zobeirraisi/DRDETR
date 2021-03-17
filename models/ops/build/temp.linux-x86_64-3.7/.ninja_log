@@ -1,0 +1,4 @@
+# ninja log v5
+0	5051	1615856846920599300	/media/karim/Data/Me/CODE/WORK/Deformable-DETR/models/ops/build/temp.linux-x86_64-3.7/media/karim/Data/Me/CODE/WORK/Deformable-DETR/models/ops/src/cpu/ms_deform_attn_cpu.o	de3f7d0e78ab3614
+0	10838	1615856852705201000	/media/karim/Data/Me/CODE/WORK/Deformable-DETR/models/ops/build/temp.linux-x86_64-3.7/media/karim/Data/Me/CODE/WORK/Deformable-DETR/models/ops/src/cuda/ms_deform_attn_cuda.o	b69e6952cb6669eb
+0	16075	1615856857939368200	/media/karim/Data/Me/CODE/WORK/Deformable-DETR/models/ops/build/temp.linux-x86_64-3.7/media/karim/Data/Me/CODE/WORK/Deformable-DETR/models/ops/src/vision.o	ef8e8f6856fec82b
