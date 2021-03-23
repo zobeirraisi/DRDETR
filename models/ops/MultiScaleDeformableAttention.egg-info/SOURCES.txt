@@ -1,4 +1,7 @@
 setup.py
+/media/karim/Data/Me/CODE/WORK/DRDETR/models/ops/src/vision.cpp
+/media/karim/Data/Me/CODE/WORK/DRDETR/models/ops/src/cpu/ms_deform_attn_cpu.cpp
+/media/karim/Data/Me/CODE/WORK/DRDETR/models/ops/src/cuda/ms_deform_attn_cuda.cu
 /media/karim/Data/Me/CODE/WORK/Deformable-DETR/models/ops/src/vision.cpp
 /media/karim/Data/Me/CODE/WORK/Deformable-DETR/models/ops/src/cpu/ms_deform_attn_cpu.cpp
 /media/karim/Data/Me/CODE/WORK/Deformable-DETR/models/ops/src/cuda/ms_deform_attn_cuda.cu

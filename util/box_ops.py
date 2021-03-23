@@ -15,17 +15,62 @@ from torchvision.ops.boxes import box_area
 
 
 def box_cxcywh_to_xyxy(x):
-    x_c, y_c, w, h,t = x.unbind(-1)
-    b = [(x_c - 0.5 * w), (y_c - 0.5 * h),
-         (x_c + 0.5 * w), (y_c + 0.5 * h),t]
+    x_c, y_c, w, h, c, s = x.unbind(-1)
+    b = [(x_c - 0.5 * w), (y_c - 0.5 * h), (x_c + 0.5 * w), (y_c + 0.5 * h), c, s]
     return torch.stack(b, dim=-1)
 
 
 def box_xyxy_to_cxcywh(x):
-    x0, y0, x1, y1,t = x.unbind(-1)
-    b = [(x0 + x1) / 2, (y0 + y1) / 2,
-         (x1 - x0), (y1 - y0),t]
+    x0, y0, x1, y1, c, s = x.unbind(-1)
+    b = [(x0 + x1) / 2, (y0 + y1) / 2, (x1 - x0), (y1 - y0), c, s]
     return torch.stack(b, dim=-1)
+
+
+# def corners_to_xy(x):
+#     # x0, y0, x1, y1, c, s = x.unbind(-1)
+#     # x0, y0, x1, y1, x2, y2, x3, y3 = x.unbind(-1)
+
+#     xmin = x[:, 0::2]
+#     ymin = x[:, 1::2]
+#     xmax = x[:, 0::2]
+#     ymax = x[:, 1::2]
+
+#     x1, _ = torch.min(xmin, dim=-1, keepdim=True)
+#     y1, _ = torch.min(ymin, dim=-1, keepdim=True)
+#     x2, _ = torch.max(xmax, dim=-1, keepdim=True)
+#     y2, _ = torch.max(ymax, dim=-1, keepdim=True)
+#     # print(x1)
+
+#     return torch.cat([x1, y1, x2, y2], dim=-1)
+
+
+def corners_to_xy(x):
+    # x0, y0, x1, y1, c, s = x.unbind(-1)
+    x0, y0, x1, y1, x2, y2, x3, y3 = x.unbind(-1)
+    # print(x0)
+    x = torch.stack([x0, x1, x2, x3], dim=-1)
+    y = torch.stack([y0, y1, y2, y3], dim=-1)
+
+    # xmax=torch.stack([x0,x1,x2,x3],dim=-1)
+    # ymax=torch.stack([y0,y1,y2,y3],dim=-1)
+    # print(xmin)
+
+    # xmin=x[:,0::2]
+    # ymin=x[:,1::2]
+    # xmax=x[:,0::2]
+    # ymax=x[:,1::2]
+
+    x1, _ = torch.min(x, dim=-1, keepdim=True)
+    y1, _ = torch.min(y, dim=-1, keepdim=True)
+    x2, _ = torch.max(x, dim=-1, keepdim=True)
+    y2, _ = torch.max(y, dim=-1, keepdim=True)
+
+    x1 = x1.clamp(min=0, max=1)
+    y1 = y1.clamp(min=0, max=1)
+    x2 = x2.clamp(min=0, max=1)
+    y2 = y2.clamp(min=0, max=1)
+
+    return torch.cat([x1, y1, x2, y2], dim=-1)
 
 
 # modified from torchvision to also return the union
@@ -85,11 +130,11 @@ def masks_to_boxes(masks):
     x = torch.arange(0, w, dtype=torch.float)
     y, x = torch.meshgrid(y, x)
 
-    x_mask = (masks * x.unsqueeze(0))
+    x_mask = masks * x.unsqueeze(0)
     x_max = x_mask.flatten(1).max(-1)[0]
     x_min = x_mask.masked_fill(~(masks.bool()), 1e8).flatten(1).min(-1)[0]
 
-    y_mask = (masks * y.unsqueeze(0))
+    y_mask = masks * y.unsqueeze(0)
     y_max = y_mask.flatten(1).max(-1)[0]
     y_min = y_mask.masked_fill(~(masks.bool()), 1e8).flatten(1).min(-1)[0]
 

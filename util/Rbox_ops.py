@@ -16,14 +16,12 @@ def box_center_to_corners(b):
         c (Tensor[N, 8]): converted boxes in (x0, y0, ..., x3, y3) format, where
             the corners are sorted counterclockwise.
     """
-    x_c, y_c, w, h,t = b.unbind(-1)  # [N,]
-    # t=torch.tensor([0],dtype=float).repeat(1, 4).cuda()
-    # t=(t*2*3.1415926535+2*3.1415926535)%2*3.1415926535
-    # print('t=',t)
-    t=((t*360+360)%360)*(3.14/180)
-    c, s = torch.cos(t), torch.sin(t)
-    # c,s=torch.cos(t*3.14/180.0),torch.sin(t*3.14/180.0)
-    center = torch.stack([x_c, y_c], dim=-1).repeat(1, 4)  # [N, 8]
+    # print(b.shape)
+    x_c, y_c, w, h, c, s = b.unbind(-1)  # [N,]
+    # print(x_c.shape)
+    s = 2 * s - 1
+    # center = torch.stack([x_c, y_c], dim=-1).repeat(1, 4)  # [N, 8]
+    center = torch.stack([x_c, y_c, x_c, y_c, x_c, y_c, x_c, y_c], dim=-1)
 
     dx = 0.5 * w
     dy = 0.5 * h
@@ -359,7 +357,7 @@ def box_inter_tensor(boxes1, boxes2):
     sizes = sizes.unsqueeze(-1).expand([-1, 8])  # [N * M, 8]
     inter[sizes <= 2] = 0
     inter[sizes <= torch.arange(8).unsqueeze(0).to(boxes1.device)] = 0
-    # print(inter.shape)
+
     return 0.5 * inter.reshape([N, M, -1]).sum(dim=-1)  # [N, M]
 
 

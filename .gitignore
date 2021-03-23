@@ -1,4 +1,13 @@
+.vscode/
+Archive/
+out/
+demo_images/
 data/
 figs/
 *.pth
 __pycache__/
+*.zip
+OUTPUT/
+.txt
+models/ops/*
+eval/ATS_GT/
